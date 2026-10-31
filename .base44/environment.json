@@ -1,0 +1,12 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": [
+    {
+      "name": "GEMINI_API_KEY",
+      "description": "Gemini API key from Google AI Studio (https://aistudio.google.com/apikey). Used by the localharness binary for every agent call in the demo console. The console page still loads without it; chats return a clear error until it is set.",
+      "requiredAtBoot": false
+    }
+  ]
+}
