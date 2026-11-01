@@ -2,16 +2,20 @@
 #
 # The SDK talks to a compiled `localharness` Go binary that is only published
 # inside the platform wheels on PyPI (see README: cloning the repo alone is not
-# enough). We install the release that matches pyproject.toml's version, keep a
-# copy of the binary on PATH (ANTIGRAVITY_HARNESS_PATH), and then remove the
-# wheel's Python package so the bind-mounted source is what gets imported.
+# enough). This source snapshot predates any released version, so the wheel is
+# pinned to 0.1.7: the closest published `localharness.proto` (same module
+# layout, and it understands every field this source sends). Newer wheels broke
+# the init handshake, older ones lack fields such as `read_url_content`.
+#
+# We keep a copy of the binary on PATH (ANTIGRAVITY_HARNESS_PATH) and then
+# remove the wheel's Python package so the bind-mounted source is imported.
 FROM python:3.12-slim
 
 ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     ANTIGRAVITY_HARNESS_PATH=/usr/local/bin/localharness
 
-RUN pip install --no-cache-dir "google-antigravity==0.1.5" watchfiles \
+RUN pip install --no-cache-dir "google-antigravity==0.1.7" watchfiles \
  && cp /usr/local/lib/python3.12/site-packages/google/antigravity/bin/localharness /usr/local/bin/localharness \
  && chmod +x /usr/local/bin/localharness \
  && pip uninstall -y google-antigravity \
